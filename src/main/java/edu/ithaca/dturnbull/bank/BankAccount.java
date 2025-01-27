@@ -1,5 +1,7 @@
 package edu.ithaca.dturnbull.bank;
 
+import java.util.List;
+
 public class BankAccount {
 
     private String email;
@@ -40,11 +42,42 @@ public class BankAccount {
 
 
     public static boolean isEmailValid(String email){
-        if (email.indexOf('@') == -1){
+        if (email.isEmpty()){
             return false;
         }
-        else {
-            return true;
+
+        int atCount = 0;
+        for (int i = 0; i < email.length() -1; i++){
+            if (email.charAt(i) == '@'){
+                atCount = atCount + 1;
+            }
         }
+        if (atCount > 1){
+            return false;
+        }
+
+        int atIndex = email.indexOf("@");
+        if (atIndex == -1 || atIndex == 0 || atIndex == email.length() - 1){
+            return false;
+        }
+
+        for (int i = 0; i < email.indexOf("@"); i++) {
+            StringBuilder local = new StringBuilder();
+            local.append(email.charAt(i));
+        }
+
+        for (int i = 0; i > email.indexOf("@") && i < email.length() -1; i++) {
+            StringBuilder domain = new StringBuilder();
+            domain.append(email.charAt(i));
+        }
+
+        public static boolean isLocalValid(String local){
+
+        }
+
+        public static boolean isDomainValid(String domain){
+
+        }
+
     }
 }
