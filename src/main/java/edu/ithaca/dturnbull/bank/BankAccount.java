@@ -47,8 +47,8 @@ public class BankAccount {
         }
 
         int atCount = 0;
-        for (int i = 0; i < email.length(); i++) {
-            if (email.charAt(i) == '@') {
+        for (char c : email.toCharArray()) {
+            if (c == '@') {
                 atCount++;
             }
         }
@@ -56,11 +56,7 @@ public class BankAccount {
             return false;
         }
 
-        int atIndex = email.indexOf("@");
-        if (atIndex == 0 || atIndex == email.length() - 1) { // '@' can't be first or last
-            return false;
-        }
-
+        int atIndex = email.indexOf('@');
         String local = email.substring(0, atIndex);
         String domain = email.substring(atIndex + 1);
 
@@ -72,17 +68,15 @@ public class BankAccount {
             return false;
         }
 
+        char prevChar = 0;
         for (char c : local.toCharArray()) {
             if (!(Character.isLetterOrDigit(c) || "!#$%&'*+/=?^_`{|}~.-".indexOf(c) != -1)) {
-                return false;
+                return false; // Invalid character
             }
-        }
-
-        // Check for consecutive dots
-        for (int i = 1; i < local.length(); i++) {
-            if (local.charAt(i) == '.' && local.charAt(i - 1) == '.') {
-                return false;
+            if (c == '.' && prevChar == '.') {
+                return false; // Consecutive dots
             }
+            prevChar = c;
         }
 
         return true;
@@ -94,25 +88,24 @@ public class BankAccount {
             return false;
         }
 
-        String[] parts = domain.split("\\.");
-        if (parts.length < 2) { // Must have at least one dot
-            return false;
+        String[] parts = domain.split("\\."); // Splits by dot into domain parts
+        if (parts.length < 2) {
+            return false; // Needs at least one subdomain and a top-level domain
         }
 
         for (String part : parts) {
             if (part.isEmpty() || part.length() > 63) {
-                return false;
+                return false; // Empty or overly long subdomain
             }
-
             for (char c : part.toCharArray()) {
                 if (!Character.isLetterOrDigit(c) && c != '-') {
-                    return false;
+                    return false; // Invalid character in subdomain
                 }
             }
         }
 
-        return true;
+        String tld = parts[parts.length - 1]; // Top-level domain
+        return tld.length() >= 2; // TLD must be at least 2 characters
     }
-
 
 }

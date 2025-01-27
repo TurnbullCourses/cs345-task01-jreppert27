@@ -28,6 +28,7 @@ class BankAccountTest {
 
         // Prefix Testing
         assertFalse(BankAccount.isEmailValid(".a@b.com")); // special character at beginning
+        assertFalse(BankAccount.isEmailValid("lola@.a@b.com")); // multiple @ symbols
         assertFalse(BankAccount.isEmailValid("a.@b.com")); // special character at end
         assertTrue(BankAccount.isEmailValid("a.b@c.com")); // special character in middle
         assertFalse(BankAccount.isEmailValid("a..b@c.com")); // two special characters in a row
@@ -41,7 +42,7 @@ class BankAccountTest {
         assertFalse(BankAccount.isEmailValid("a@b..com")); // two dots in a row
         assertFalse(BankAccount.isEmailValid("a@b.c")); // invalid top level domain
         assertTrue(BankAccount.isEmailValid("a@b.cc")); // boundry case top level domain
-        assertTrue(BankAccount.isEmailValid("a@b.org")); // valid top level domain
+        assertTrue(BankAccount.isEmailValid("a@b.org")); // valid top level domain  */
 
     }
 
