@@ -60,18 +60,19 @@ public class BankAccount {
         String local = email.substring(0, atIndex);
         String domain = email.substring(atIndex + 1);
 
-        return isLocalValid(local) && isDomainValid(domain);
+        return isPrefixValid(local) && isDomainValid(domain);
     }
 
-    private static boolean isLocalValid(String local) {
-        if (local.isEmpty() || local.length() > 64 || local.startsWith(".") || local.endsWith(".")) {
+    private static boolean isPrefixValid(String prefix) {
+        if (prefix.isEmpty() || prefix.length() > 64 || prefix.startsWith(".") || prefix.endsWith(".")) {
             return false;
         }
 
         char prevChar = 0;
-        for (char c : local.toCharArray()) {
-            if (!(Character.isLetterOrDigit(c) || "!#$%&'*+/=?^_`{|}~.-".indexOf(c) != -1)) {
-                return false; // Invalid character
+        for (char c : prefix.toCharArray()) {
+            // Allow only valid characters
+            if (!(Character.isLetterOrDigit(c) || "!$%&'*+/=?^_`{|}~.-".indexOf(c) != -1)) {
+                return false; // Invalid character (e.g., '#')
             }
             if (c == '.' && prevChar == '.') {
                 return false; // Consecutive dots
@@ -81,6 +82,7 @@ public class BankAccount {
 
         return true;
     }
+
 
 
     private static boolean isDomainValid(String domain) {
