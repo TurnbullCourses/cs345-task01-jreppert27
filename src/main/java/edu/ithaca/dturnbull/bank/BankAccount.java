@@ -41,43 +41,78 @@ public class BankAccount {
     }
 
 
-    public static boolean isEmailValid(String email){
-        if (email.isEmpty()){
+    public static boolean isEmailValid(String email) {
+        if (email.isEmpty() || email.length() > 320) {
             return false;
         }
 
         int atCount = 0;
-        for (int i = 0; i < email.length() -1; i++){
-            if (email.charAt(i) == '@'){
-                atCount = atCount + 1;
+        for (int i = 0; i < email.length(); i++) {
+            if (email.charAt(i) == '@') {
+                atCount++;
             }
         }
-        if (atCount > 1){
+        if (atCount != 1) {
             return false;
         }
 
         int atIndex = email.indexOf("@");
-        if (atIndex == -1 || atIndex == 0 || atIndex == email.length() - 1){
+        if (atIndex == 0 || atIndex == email.length() - 1) { // '@' can't be first or last
             return false;
         }
 
-        for (int i = 0; i < email.indexOf("@"); i++) {
-            StringBuilder local = new StringBuilder();
-            local.append(email.charAt(i));
-        }
+        String local = email.substring(0, atIndex);
+        String domain = email.substring(atIndex + 1);
 
-        for (int i = 0; i > email.indexOf("@") && i < email.length() -1; i++) {
-            StringBuilder domain = new StringBuilder();
-            domain.append(email.charAt(i));
-        }
-
-        public static boolean isLocalValid(String local){
-
-        }
-
-        public static boolean isDomainValid(String domain){
-
-        }
-
+        return isLocalValid(local) && isDomainValid(domain);
     }
+
+    private static boolean isLocalValid(String local) {
+        if (local.isEmpty() || local.length() > 64 || local.startsWith(".") || local.endsWith(".")) {
+            return false;
+        }
+
+        for (char c : local.toCharArray()) {
+            if (!(Character.isLetterOrDigit(c) || "!#$%&'*+/=?^_`{|}~.-".indexOf(c) != -1)) {
+                return false;
+            }
+        }
+
+        // Check for consecutive dots
+        for (int i = 1; i < local.length(); i++) {
+            if (local.charAt(i) == '.' && local.charAt(i - 1) == '.') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    private static boolean isDomainValid(String domain) {
+        if (domain.isEmpty() || domain.length() > 255 || domain.startsWith("-") || domain.endsWith("-")) {
+            return false;
+        }
+
+        String[] parts = domain.split("\\.");
+        if (parts.length < 2) { // Must have at least one dot
+            return false;
+        }
+
+        for (String part : parts) {
+            if (part.isEmpty() || part.length() > 63) {
+                return false;
+            }
+
+            for (char c : part.toCharArray()) {
+                if (!Character.isLetterOrDigit(c) && c != '-') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
 }
