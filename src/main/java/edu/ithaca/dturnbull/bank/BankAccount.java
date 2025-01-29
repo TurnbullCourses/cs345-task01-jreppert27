@@ -108,6 +108,8 @@ public class BankAccount {
         // uses DomainValidator from Apache Commons Validator to validate domain
         // not only checks for valid characters but also checks if domain is a valid
         return DomainValidator.getInstance().isValid(domain);
+        // in code review, listener suggested I test that the domain not only has valid
+        // charcters but also is a valid domain
     }
 
 }
