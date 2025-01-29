@@ -33,6 +33,10 @@ public class BankAccount {
      *       than balance
      */
     public void withdraw(double amount) throws InsufficientFundsException {
+        if (!isValidAmount(amount)) {
+            throw new IllegalArgumentException("Invalid dollar amount");
+        }
+
         if (amount <= balance) {
             balance -= amount;
         } else {
@@ -41,11 +45,19 @@ public class BankAccount {
     }
 
     public void deposit(double amount) {
+        if (!isValidAmount(amount)) {
+            throw new IllegalArgumentException("Invalid dollar amount");
+        }
+
         if (amount >= 0) {
             balance += amount;
         } else {
             throw new IllegalArgumentException("Cannot deposit negative amount");
         }
+    }
+
+    private boolean isValidAmount(double amount) {
+        return (amount * 100) == Math.floor(amount * 100); // Ensures only two decimal places
     }
 
     public static boolean isEmailValid(String email) {
