@@ -12,11 +12,16 @@ public class BankAccount {
      * @throws IllegalArgumentException if email is invalid
      */
     public BankAccount(String email, double startingBalance) {
-        if (isEmailValid(email)) {
+        if (isEmailValid(email) && isAmountValid(startingBalance)) {
             this.email = email;
             this.balance = startingBalance;
         } else {
-            throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
+            if (!isAmountValid(startingBalance)) {
+                throw new IllegalArgumentException("Starting balance is invalid, cannot create account");
+            } else {
+                throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
+
+            }
         }
     }
 
@@ -33,7 +38,7 @@ public class BankAccount {
      *       than balance
      */
     public void withdraw(double amount) throws InsufficientFundsException {
-        if (!isValidAmount(amount)) {
+        if (!isAmountValid(amount)) {
             throw new IllegalArgumentException("Invalid dollar amount");
         }
 
@@ -45,18 +50,26 @@ public class BankAccount {
     }
 
     public void deposit(double amount) {
-        if (!isValidAmount(amount)) {
+        if (!isAmountValid(amount)) {
             throw new IllegalArgumentException("Invalid dollar amount");
         }
 
-        if (amount >= 0) {
-            balance += amount;
-        } else {
-            throw new IllegalArgumentException("Cannot deposit negative amount");
-        }
+        balance += amount;
     }
 
-    private boolean isValidAmount(double amount) {
+    public void transfer(double amount, BankAccount otherAccount) throws InsufficientFundsException {
+        if (!isAmountValid(amount)) {
+            throw new IllegalArgumentException("Invalid dollar amount");
+        }
+
+        withdraw(amount);
+        otherAccount.deposit(amount);
+    }
+
+    public static boolean isAmountValid(double amount) {
+        if (amount < 0) { // if amount is negative, not valid
+            return false;
+        }
         return (amount * 100) == Math.floor(amount * 100); // Ensures only two decimal places
     }
 
